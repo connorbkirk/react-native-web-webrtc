@@ -29,9 +29,16 @@ const RTCViewSourcePropType = PropTypes.oneOfType([
 
 class RTCView extends Component {
   render() {
-    const {mirror, objectFit, srcObject, zOrder} = this.props;
+    const {mirror, objectFit, streamURL, zOrder, muted} = this.props;
 
-    return createElement('video', {srcObject});
+    var attributes = {
+        ref: streamURL,
+        autoPlay: true,
+        playsInline: true,
+        muted
+    }
+
+    return createElement('video', attributes);
   }
 }
 Object.defineProperties(RTCView,
@@ -64,10 +71,7 @@ Object.defineProperties(RTCView,
        */
       objectFit: PropTypes.oneOf(['contain', 'cover']),
 
-      srcObject: PropTypes.shape({
-        addTrack: PropTypes.func.isRequired,
-        removeTrack: PropTypes.func.isRequired
-      }),
+      streamURL: PropTypes.instanceOf(Object),
 
       /**
        * Similarly to the CSS property z-index, specifies the z-order of this
@@ -92,7 +96,9 @@ Object.defineProperties(RTCView,
        * remote video(s) which appear in the background, and 1 for the local
        * video(s) which appear above the remote video(s).
        */
-      zOrder: PropTypes.number
+      zOrder: PropTypes.number,
+
+      muted: PropTypes.bool
     }
   },
   defaultProps:
